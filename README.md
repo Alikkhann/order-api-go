@@ -22,7 +22,7 @@
   - **Repository** - работа с базой данных
     
   ```
-6-order-api-cart/
+order-api-go/
 ├── cmd/
 │   ├── main.go             — точка входа
 │   └── order_test.go       — E2E-тест
