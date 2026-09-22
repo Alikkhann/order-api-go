@@ -1,15 +1,16 @@
 package order
 
 import (
-	"errors"
-	"strconv"
-	"net/http"
 	"6-project/configs"
+	"6-project/pkg/contextKeys"
+	"6-project/pkg/middleware"
 	"6-project/pkg/req"
 	"6-project/pkg/resp"
+	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/gorilla/mux"
-	"6-project/pkg/middleware"
-	"6-project/pkg/contextKeys"
 )
 
 type OrderHandlerDesp struct {
@@ -65,7 +66,8 @@ func (handler *OrderHandler) Get() http.HandlerFunc {
 			resp.Json(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		order, err := handler.orderService.GetOrder(uint(id))
+		user := r.Context().Value(contextkey.UserContextKey).(string)
+		order, err := handler.orderService.GetOrder(user, uint(id))
 		if err != nil {
 			if errors.Is(err, ErrOrderNotFound) {
 				resp.Json(w, err.Error(), http.StatusNotFound)

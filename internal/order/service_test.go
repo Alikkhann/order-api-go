@@ -108,7 +108,7 @@ func TestServiceCreateOrder_Success(t *testing.T) {
 
 func TestServiceGetOrder_Success(t *testing.T) {
 	service := NewTestService()
-	resp, err := service.GetOrder(1)
+	resp, err := service.GetOrder("9281112233", 1)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -187,7 +187,7 @@ func TestServiceGetOrder_NotFound(t *testing.T) {
     AuthByPhoneRepo:   &MokAuthRepo{},
     ProductRepository: &MokProductRepo{},
   }
-	_, err := service.GetOrder(uint(1))
+	_, err := service.GetOrder("9281112233", uint(1))
 	if !errors.Is(err, order.ErrOrderNotFound) {
 		t.Errorf("expected ErrorNotFound, got %v", err)
 	}

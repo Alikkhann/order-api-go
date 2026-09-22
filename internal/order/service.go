@@ -66,7 +66,15 @@ func (repo *OrderService) CreateOrder(body []uint, userData string) (*OrderRespo
 	return &resp, nil
 }
 
-func (repo *OrderService) GetOrder(id uint) (*OrderResponse, error) {
+func (repo *OrderService) GetOrder(phone string, id uint) (*OrderResponse, error) {
+	user, err := repo.AuthByPhoneRepo.FindByPhone(phone)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, ErrUserNotFound
+	}
+	
 	order, err := repo.OrderRepository.GetById(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -74,6 +82,11 @@ func (repo *OrderService) GetOrder(id uint) (*OrderResponse, error) {
 		}
 	return nil, err
 	}
+
+	if user.ID != order.UserId {
+		return nil, ErrOrderNotFound
+	}
+
 	resp := OrderResponse{
 		ID: order.ID,
 		UserId: order.UserId,
